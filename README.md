@@ -29,11 +29,11 @@ The WebM(s) to verify. If not provided, we will test all WebMs in the current di
 
 The groups of tests that should be run.
 
-The `format` tests pertain to the file format and context of streams.
+The `format` group pertains to testing of the file format and context of streams.
 
-The `video` group pertains to tests to the video stream of the file.
+The `video` group pertains to testing of the video stream of the file.
 
-The `audio` group pertains to tests of the audio stream of the file.
+The `audio` group pertains to testing of the audio stream of the file.
 
 By default, all test groups will be included.
 
