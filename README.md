@@ -19,9 +19,30 @@ Test success/failure does **NOT** guarantee acceptance/rejection of submissions.
 
 ### Usage
 
-    python -m test_webm [-h] [--loglevel [{debug,info,error}] [file [file ...]]
+    test_webm [-h] [--loglevel [{debug,info,error}]] [--groups [{format,video,audio} ...]] [file ...]
 
-* `--loglevel error`: Only show error messages
-* `--loglevel info`: Show error messages and script progression info messages
-* `--loglevel debug`: Show all messages, including variable dumps
-* `[file ...]`: The WebM(s) to verify. If not provided, we will test all WebMs in the current directory.
+**File**
+
+The WebM(s) to verify. If not provided, we will test all WebMs in the current directory.
+
+**Groups**
+
+The groups of tests that should be run.
+
+The `format` group pertains to testing of the file format and context of streams.
+
+The `video` group pertains to testing of the video stream of the file.
+
+The `audio` group pertains to testing of the audio stream of the file.
+
+By default, all test groups will be included.
+
+**Logging**
+
+Determines the level of the logging for the program.
+
+`--loglevel error` will only output error messages.
+
+`--loglevel info` will output error messages and script progression info messages.
+
+`--loglevel debug` will output all messages, including variable dumps.
