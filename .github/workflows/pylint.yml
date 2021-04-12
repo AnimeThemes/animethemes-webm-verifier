@@ -19,4 +19,4 @@ jobs:
         pip install pylint
     - name: Run pylint
       run: |
-        python test_webm
+        pylint test_webm
