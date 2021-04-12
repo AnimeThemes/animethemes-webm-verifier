@@ -7,9 +7,9 @@ with open('README.md') as f:
 
 setup(
     name='animethemes-webm-verifier',
-    version='1.0',
-    author='paranarimasu',
-    author_email='paranarimasu@gmail.com',
+    version='2.0',
+    author='AnimeThemes',
+    author_email='admin@animethemes.moe',
     url='https://github.com/AnimeThemes/animethemes-webm-verifier',
     description='Verify WebM(s) Against AnimeThemes Encoding Standards',
     long_description=long_description,
