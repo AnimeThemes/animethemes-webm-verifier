@@ -18,3 +18,19 @@ class TestGroup(Enum):
     FORMAT = ('format', TestFormat)
     VIDEO = ('video', TestVideo)
     AUDIO = ('audio', TestAudio)
+
+    @staticmethod
+    def value_of(val):
+        """Get enum instance by value
+
+        :param val: the enum value to match
+        :type: str
+
+        :return: the matching test group
+        :rtype: TestGroup
+        """
+        for group in TestGroup:
+            if group.value == val:
+                return group
+
+        return None

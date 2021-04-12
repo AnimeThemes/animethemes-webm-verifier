@@ -83,7 +83,7 @@ def main():
         suite = unittest.TestSuite()
 
         for group in args.groups:
-            test_group = TestGroup(group)
+            test_group = TestGroup.value_of(group)
             test_class = test_group.test_class
             test_names = test_loader.getTestCaseNames(test_class)
 
