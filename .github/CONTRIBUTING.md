@@ -10,8 +10,6 @@ If further discussion is needed before work can be started, please make use of t
 
 Follow the [Installation Guide](/AnimeThemes/animethemes-webm-verifier/blob/main/README.md#install) to ensure a functional local instance of the AnimeThemes WebM Verifier forked from this repository.
 
-Enable the forked repository in [StyleCI](https://styleci.io/) so that code styling guidelines are followed. At the time of writing, analysis is run on push and merge.
-
 Set this repository as upstream to the forked repository.
 
 `git remote add upstream https://github.com/AnimeThemes/animethemes-webm-verifier.git`
@@ -60,8 +58,6 @@ git rebase main
 Push changes to remote.
 
 `git push --set-upstream origin new-feature-branch`
-
-Confirm StyleCI passing status on push.
 
 Create Pull Request from the new feature branch to the upstream main branch.
 
