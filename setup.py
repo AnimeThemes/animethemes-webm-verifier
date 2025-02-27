@@ -7,7 +7,7 @@ with open('README.md') as f:
 
 setup(
     name='animethemes-webm-verifier',
-    version='1.1',
+    version='1.2.2',
     author='AnimeThemes',
     author_email='admin@animethemes.moe',
     url='https://github.com/AnimeThemes/animethemes-webm-verifier',
@@ -27,4 +27,7 @@ setup(
         'Operating System :: OS Independent',
     ],
     python_requires='>=3.6',
+    install_requires=[
+        'packaging',
+    ],
 )
