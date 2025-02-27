@@ -124,7 +124,7 @@ class WebmFormat:
             stderr=subprocess.STDOUT
         ).decode('utf-8').strip()
 
-        loudness_stats = re.search('^{[^}]*}$', loudness_output, re.MULTILINE)
+        loudness_stats = re.search(r'\{[^}]*\}', loudness_output, re.DOTALL)
         return json.loads(loudness_stats.group(0))
 
     # We expect video at index 0 and audio at index 1,
