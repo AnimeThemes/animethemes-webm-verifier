@@ -1,6 +1,6 @@
 """A collection of tests to verify the file against format encoding standards"""
 
-from distutils.version import LooseVersion
+from packaging import version
 from ._test_webm import TestWebm
 
 
@@ -39,10 +39,10 @@ class TestFormat(TestWebm):
         for tag_key in self.webm_format.webm_format['format']['tags']:
             if tag_key.lower() == 'encoder':
                 # FFmpeg versioning doesn't comply with PEP 440 so we can't use packaging.version
-                webm_ffmpeg_version = LooseVersion(
+                webm_ffmpeg_version = version.parse(
                     self.webm_format.webm_format['format']['tags'][tag_key]
                 )
-                latest_ffmpeg_version = LooseVersion('Lavf58.76.100')
+                latest_ffmpeg_version = version.parse('Lavf58.76.100')
                 self.assertTrue(
                     webm_ffmpeg_version >= latest_ffmpeg_version,
                     'Build is out of date'
