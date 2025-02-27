@@ -7,7 +7,7 @@ with open('README.md') as f:
 
 setup(
     name='animethemes-webm-verifier',
-    version='1.2.2',
+    version='1.2.3',
     author='AnimeThemes',
     author_email='admin@animethemes.moe',
     url='https://github.com/AnimeThemes/animethemes-webm-verifier',
