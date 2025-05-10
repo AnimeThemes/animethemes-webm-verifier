@@ -42,7 +42,6 @@ class TestFormat(TestWebm):
                 webm_ffmpeg_version = version.parse(
                     self.webm_format.webm_format['format']['tags'][tag_key].removeprefix('Lavf')
                 )
-
                 latest_ffmpeg_version = version.parse('61.7.100')
                 self.assertTrue(
                     webm_ffmpeg_version >= latest_ffmpeg_version,
