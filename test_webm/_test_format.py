@@ -40,9 +40,9 @@ class TestFormat(TestWebm):
             if tag_key.lower() == 'encoder':
                 # FFmpeg versioning doesn't comply with PEP 440 so we can't use packaging.version
                 webm_ffmpeg_version = version.parse(
-                    self.webm_format.webm_format['format']['tags'][tag_key]
+                    self.webm_format.webm_format['format']['tags'][tag_key].removeprefix('Lavf')
                 )
-                latest_ffmpeg_version = version.parse('Lavf58.76.100')
+                latest_ffmpeg_version = version.parse('61.7.100')
                 self.assertTrue(
                     webm_ffmpeg_version >= latest_ffmpeg_version,
                     'Build is out of date'
