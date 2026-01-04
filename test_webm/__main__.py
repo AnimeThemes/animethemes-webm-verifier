@@ -16,33 +16,33 @@ def main():
     """Verify WebM(s) Against /r/AnimeThemes Encoding Standards"""
     # Load/Validate Arguments
     parser = argparse.ArgumentParser(
-        prog='test_webm',
-        description='Verify WebM(s) Against /r/AnimeThemes Encoding Standards',
-        formatter_class=argparse.RawTextHelpFormatter
+        prog="test_webm",
+        description="Verify WebM(s) Against /r/AnimeThemes Encoding Standards",
+        formatter_class=argparse.RawTextHelpFormatter,
     )
 
     parser.add_argument(
-        'file',
-        nargs='*',
-        default=[f for f in os.listdir('.') if f.endswith('.webm')],
+        "file",
+        nargs="*",
+        default=[f for f in os.listdir(".") if f.endswith(".webm")],
         type=file_arg_type,
-        help='The WebM(s) to verify'
+        help="The WebM(s) to verify",
     )
 
     parser.add_argument(
-        '--loglevel',
-        nargs='?',
-        default='info',
-        choices=['debug', 'info', 'error'],
-        help='Set logging level'
+        "--loglevel",
+        nargs="?",
+        default="info",
+        choices=["debug", "info", "error"],
+        help="Set logging level",
     )
 
     parser.add_argument(
-        '--groups',
-        nargs='*',
+        "--groups",
+        nargs="*",
         default=[group.value for group in TestGroup],
         choices=[group.value for group in TestGroup],
-        help='Select groups of tests to run'
+        help="Select groups of tests to run",
     )
 
     args = parser.parse_args()
@@ -51,26 +51,26 @@ def main():
     logging.basicConfig(
         stream=sys.stdout,
         level=logging.getLevelName(args.loglevel.upper()),
-        format='%(levelname)s: %(message)s'
+        format="%(levelname)s: %(message)s",
     )
 
     # Env Check: Check that dependencies are installed
-    if shutil.which('ffmpeg') is None:
-        logging.error('FFmpeg is required')
+    if shutil.which("ffmpeg") is None:
+        logging.error("FFmpeg is required")
         sys.exit()
 
-    if shutil.which('ffprobe') is None:
-        logging.error('FFprobe is required')
+    if shutil.which("ffprobe") is None:
+        logging.error("FFprobe is required")
         sys.exit()
 
     if not args.file:
-        logging.error('No WebMs to verify')
+        logging.error("No WebMs to verify")
         sys.exit()
 
-    logging.info('Verifying files...')
+    logging.info("Verifying files...")
 
     for file in args.file:
-        logging.info('Using file \'%s\'...', file)
+        logging.info("Using file '%s'...", file)
 
         webm_format = WebmFormat(file)
 
@@ -78,7 +78,7 @@ def main():
         if logging.root.isEnabledFor(logging.DEBUG):
             webm_format.debug_dump()
 
-        logging.info('Running Tests...')
+        logging.info("Running Tests...")
         test_loader = unittest.TestLoader()
         suite = unittest.TestSuite()
 
@@ -93,8 +93,8 @@ def main():
         unittest.TextTestRunner().run(suite)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        logging.error('Exiting after keyboard interrupt')
+        logging.error("Exiting after keyboard interrupt")

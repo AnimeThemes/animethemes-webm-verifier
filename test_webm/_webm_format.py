@@ -15,22 +15,22 @@ class WebmFormat:
     """
 
     format_args = [
-        'ffprobe',
-        '-v',
-        'quiet',
-        '-print_format',
-        'json',
-        '-show_streams',
-        '-show_format',
-        '-show_chapters'
+        "ffprobe",
+        "-v",
+        "quiet",
+        "-print_format",
+        "json",
+        "-show_streams",
+        "-show_format",
+        "-show_chapters",
     ]
 
     def __init__(self, file):
         self.webm_format = WebmFormat.get_webm_format(file)
         self.audio_format = WebmFormat.get_audio_format(file)
         self.loudness_stats = WebmFormat.get_loudness_stats(file)
-        self.video_index = WebmFormat.get_stream_index(self.webm_format, 'video')
-        self.audio_index = WebmFormat.get_stream_index(self.webm_format, 'audio')
+        self.video_index = WebmFormat.get_stream_index(self.webm_format, "video")
+        self.audio_index = WebmFormat.get_stream_index(self.webm_format, "audio")
 
     # Source 1: WebM Streams/Formats
     @staticmethod
@@ -43,10 +43,10 @@ class WebmFormat:
         :return: the container format and stream information of the file
         :rtype: dict
         """
-        logging.info('Retrieving WebmM stream/format data...')
+        logging.info("Retrieving WebmM stream/format data...")
 
         webm_args = WebmFormat.format_args + [file]
-        webm_format = subprocess.check_output(webm_args).decode('utf-8')
+        webm_format = subprocess.check_output(webm_args).decode("utf-8")
         return json.loads(webm_format)
 
     # Source 2: Extracted audio stream, needed for verifying audio bitrate
@@ -60,29 +60,29 @@ class WebmFormat:
         :return: the container format and stream information of the extracted audio
         :rtype: dict
         """
-        logging.info('Retrieving extracted audio stream/format data...')
+        logging.info("Retrieving extracted audio stream/format data...")
 
-        ogg_file = f'{file}.ogg'
+        ogg_file = f"{file}.ogg"
 
         ogg_args = [
-            'ffmpeg',
-            '-v',
-            'quiet',
-            '-i',
+            "ffmpeg",
+            "-v",
+            "quiet",
+            "-i",
             file,
-            '-vn',
-            '-acodec',
-            'copy',
-            '-f',
-            'ogg',
-            '-y',
-            ogg_file
+            "-vn",
+            "-acodec",
+            "copy",
+            "-f",
+            "ogg",
+            "-y",
+            ogg_file,
         ]
 
         subprocess.call(ogg_args)
 
         audio_args = WebmFormat.format_args + [ogg_file]
-        audio_format = subprocess.check_output(audio_args).decode('utf-8')
+        audio_format = subprocess.check_output(audio_args).decode("utf-8")
         audio_format = json.loads(audio_format)
 
         os.remove(ogg_file)
@@ -101,30 +101,31 @@ class WebmFormat:
         :return: the loudness stats of the file
         :rtype: dict
         """
-        logging.info('Retrieving loudness data...')
+        logging.info("Retrieving loudness data...")
 
         loudness_args = [
-            'ffmpeg',
-            '-i',
+            "ffmpeg",
+            "-i",
             file,
-            '-hide_banner',
-            '-nostats',
-            '-vn',
-            '-sn',
-            '-dn',
-            '-af',
-            'loudnorm=I=-16:LRA=20:TP=-1:dual_mono=true:linear=true:print_format=json',
-            '-f',
-            'null',
-            'NUL'
+            "-hide_banner",
+            "-nostats",
+            "-vn",
+            "-sn",
+            "-dn",
+            "-af",
+            "loudnorm=I=-16:LRA=20:TP=-1:dual_mono=true:linear=true:print_format=json",
+            "-f",
+            "null",
+            "NUL",
         ]
 
-        loudness_output = subprocess.check_output(
-            loudness_args,
-            stderr=subprocess.STDOUT
-        ).decode('utf-8').strip()
+        loudness_output = (
+            subprocess.check_output(loudness_args, stderr=subprocess.STDOUT)
+            .decode("utf-8")
+            .strip()
+        )
 
-        loudness_stats = re.search(r'\{[^}]*\}', loudness_output, re.DOTALL)
+        loudness_stats = re.search(r"\{[^}]*\}", loudness_output, re.DOTALL)
         return json.loads(loudness_stats.group(0))
 
     # We expect video at index 0 and audio at index 1,
@@ -142,8 +143,8 @@ class WebmFormat:
         :return: the index of the stream of the given type
         :rtype: int
         """
-        for i in range(len(webm_format['streams'])):
-            codec_type = webm_format['streams'][i]['codec_type']
+        for i in range(len(webm_format["streams"])):
+            codec_type = webm_format["streams"][i]["codec_type"]
             if codec_type == target_codec_type:
                 return i
         return 0
@@ -157,7 +158,7 @@ class WebmFormat:
         :return: the value of the named entry for the video stream
         :rtype: str
         """
-        return self.webm_format['streams'][self.video_index].get(entry, '')
+        return self.webm_format["streams"][self.video_index].get(entry, "")
 
     # Get entry from audio stream
     def get_audio_stream_entry(self, entry):
@@ -168,7 +169,7 @@ class WebmFormat:
         :return: the value of the named entry for the audio stream
         :rtype: str
         """
-        return self.webm_format['streams'][self.audio_index].get(entry, '')
+        return self.webm_format["streams"][self.audio_index].get(entry, "")
 
     # Get entry from audio format
     def get_audio_format_entry(self, entry):
@@ -179,7 +180,7 @@ class WebmFormat:
         :return: the value of the named entry for the audio format
         :rtype: str
         """
-        return self.audio_format['format'].get(entry, '')
+        return self.audio_format["format"].get(entry, "")
 
     # Get entry from loudness stats
     def get_loudness_entry(self, entry):
@@ -190,89 +191,91 @@ class WebmFormat:
         :return: the value of the named entry for loudness stats
         :rtype: str
         """
-        return self.loudness_stats.get(entry, '')
+        return self.loudness_stats.get(entry, "")
 
     # Dump test data
     def debug_dump(self):
         """Log container format and stream information of the file for debugging"""
-        logging.debug('Dumping test data...')
-        logging.debug('video_index: \'%s\'', self.video_index)
-        logging.debug('audio_index: \'%s\'', self.audio_index)
+        logging.debug("Dumping test data...")
+        logging.debug("video_index: '%s'", self.video_index)
+        logging.debug("audio_index: '%s'", self.audio_index)
         logging.debug(
-            'webm_format[streams][0][codec_type]: \'%s\'',
-            self.webm_format['streams'][0]['codec_type']
+            "webm_format[streams][0][codec_type]: '%s'",
+            self.webm_format["streams"][0]["codec_type"],
         )
         logging.debug(
-            'webm_format[streams][1][codec_type]: \'%s\'',
-            self.webm_format['streams'][1]['codec_type']
-        )
-        logging.debug('len(webm_format[streams]): \'%s\'', len(self.webm_format['streams']))
-        logging.debug(
-            'webm_format[format][format_name]: \'%s\'',
-            self.webm_format['format']['format_name']
+            "webm_format[streams][1][codec_type]: '%s'",
+            self.webm_format["streams"][1]["codec_type"],
         )
         logging.debug(
-            'webm_format[format][bit_rate]): \'%s\'',
-            self.webm_format['format']['bit_rate']
+            "len(webm_format[streams]): '%s'", len(self.webm_format["streams"])
         )
         logging.debug(
-            'webm_format[streams][video_index][height]: \'%s\'',
-            self.webm_format['streams'][self.video_index]['height']
-        )
-        logging.debug('webm_format[chapters]: \'%s\'', self.webm_format["chapters"])
-        logging.debug(
-            'webm_format[streams][video_index][codec_name]: \'%s\'',
-            self.webm_format['streams'][self.video_index]['codec_name']
+            "webm_format[format][format_name]: '%s'",
+            self.webm_format["format"]["format_name"],
         )
         logging.debug(
-            'webm_format[streams][video_index][pix_fmt]: \'%s\'',
-            self.webm_format['streams'][self.video_index]['pix_fmt']
+            "webm_format[format][bit_rate]): '%s'",
+            self.webm_format["format"]["bit_rate"],
         )
         logging.debug(
-            'webm_format[streams][video_index].get(color_space): \'%s\'',
-            self.webm_format['streams'][self.video_index].get('color_space')
+            "webm_format[streams][video_index][height]: '%s'",
+            self.webm_format["streams"][self.video_index]["height"],
+        )
+        logging.debug("webm_format[chapters]: '%s'", self.webm_format["chapters"])
+        logging.debug(
+            "webm_format[streams][video_index][codec_name]: '%s'",
+            self.webm_format["streams"][self.video_index]["codec_name"],
         )
         logging.debug(
-            'webm_format[streams][video_index].get(color_transfer): \'%s\'',
-            self.webm_format['streams'][self.video_index].get('color_transfer')
+            "webm_format[streams][video_index][pix_fmt]: '%s'",
+            self.webm_format["streams"][self.video_index]["pix_fmt"],
         )
         logging.debug(
-            'webm_format[streams][video_index].get(color_primaries): \'%s\'',
-            self.webm_format['streams'][self.video_index].get('color_primaries')
+            "webm_format[streams][video_index].get(color_space): '%s'",
+            self.webm_format["streams"][self.video_index].get("color_space"),
         )
         logging.debug(
-            'webm_format[streams][video_index][avg_frame_rate]: \'%s\'',
-            self.webm_format['streams'][self.video_index]['avg_frame_rate']
+            "webm_format[streams][video_index].get(color_transfer): '%s'",
+            self.webm_format["streams"][self.video_index].get("color_transfer"),
         )
         logging.debug(
-            'webm_format[streams][audio_index][codec_name]: \'%s\'',
-            self.webm_format['streams'][self.audio_index]['codec_name']
+            "webm_format[streams][video_index].get(color_primaries): '%s'",
+            self.webm_format["streams"][self.video_index].get("color_primaries"),
         )
         logging.debug(
-            '[loudness_stats] input_i: \'%s\', '
-            'input_lra: \'%s\', '
-            'input_tp: \'%s\', '
-            'input_thresh: \'%s\', '
-            'target_offset: \'%s\'',
-            self.loudness_stats['input_i'],
-            self.loudness_stats['input_lra'],
-            self.loudness_stats['input_tp'],
-            self.loudness_stats['input_thresh'],
-            self.loudness_stats['target_offset'],
+            "webm_format[streams][video_index][avg_frame_rate]: '%s'",
+            self.webm_format["streams"][self.video_index]["avg_frame_rate"],
         )
         logging.debug(
-            'audio_format[format][bitrate]: \'%s\'',
-            self.audio_format['format']['bit_rate']
+            "webm_format[streams][audio_index][codec_name]: '%s'",
+            self.webm_format["streams"][self.audio_index]["codec_name"],
         )
         logging.debug(
-            'webm_format[streams][audio_index][sample_rate]: \'%s\'',
-            self.webm_format['streams'][self.audio_index]['sample_rate']
+            "[loudness_stats] input_i: '%s', "
+            "input_lra: '%s', "
+            "input_tp: '%s', "
+            "input_thresh: '%s', "
+            "target_offset: '%s'",
+            self.loudness_stats["input_i"],
+            self.loudness_stats["input_lra"],
+            self.loudness_stats["input_tp"],
+            self.loudness_stats["input_thresh"],
+            self.loudness_stats["target_offset"],
         )
         logging.debug(
-            'webm_format[streams][audio_index][channels]: \'%s\'',
-            self.webm_format['streams'][self.audio_index]['channels']
+            "audio_format[format][bitrate]: '%s'",
+            self.audio_format["format"]["bit_rate"],
         )
         logging.debug(
-            'webm_format[streams][audio_index][channel_layout]: \'%s\'',
-            self.webm_format['streams'][self.audio_index]['channel_layout']
+            "webm_format[streams][audio_index][sample_rate]: '%s'",
+            self.webm_format["streams"][self.audio_index]["sample_rate"],
+        )
+        logging.debug(
+            "webm_format[streams][audio_index][channels]: '%s'",
+            self.webm_format["streams"][self.audio_index]["channels"],
+        )
+        logging.debug(
+            "webm_format[streams][audio_index][channel_layout]: '%s'",
+            self.webm_format["streams"][self.audio_index]["channel_layout"],
         )
