@@ -13,10 +13,6 @@ class TestWebm(TestCase):
     :type webm_format: WebmFormat
     """
 
-    def __init__(
-            self,
-            testname,
-            webm_format
-    ):
+    def __init__(self, testname, webm_format):
         super().__init__(testname)
         self.webm_format = webm_format

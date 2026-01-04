@@ -11,7 +11,7 @@ Test success/failure does **NOT** guarantee acceptance/rejection of submissions.
 **Requirements:**
 
 * FFmpeg
-* Python >= 3.6
+* Python >= 3.14
 
 **Install:**
 
